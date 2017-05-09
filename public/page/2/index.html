@@ -61,12 +61,16 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-android-JNI" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2017/03/03/hello-world/" class="article-date">
-  <time datetime="2017-03-03T01:53:42.439Z" itemprop="datePublished">2017-03-03</time>
+    <a href="/2017/05/09/android-JNI/" class="article-date">
+  <time datetime="2017-05-09T08:48:00.000Z" itemprop="datePublished">2017-05-09</time>
 </a>
     
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/android-JNI/">android JNI</a>
+  </div>
+
   </div>
   <div class="article-inner">
     
@@ -75,7 +79,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/03/03/hello-world/">Hello World</a>
+      <a class="article-title" href="/2017/05/09/android-JNI/">Androi JNI 开发</a>
     </h1>
   
 
@@ -83,22 +87,22 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <h2 id="通过一个读写INI的例子来描述jni的开发"><a href="#通过一个读写INI的例子来描述jni的开发" class="headerlink" title="通过一个读写INI的例子来描述jni的开发"></a>通过一个读写INI的例子来描述jni的开发</h2><h3 id="1-创建自动生成JNI头文件工具"><a href="#1-创建自动生成JNI头文件工具" class="headerlink" title="1. 创建自动生成JNI头文件工具"></a>1. 创建自动生成JNI头文件工具</h3><p><strong>参考下图</strong><br><img src="/2017/05/09/android-JNI/1.png" alt=""></p>
+<h3 id="2-创建本地接口"><a href="#2-创建本地接口" class="headerlink" title="2. 创建本地接口"></a>2. 创建本地接口</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> String <span class="title">readIni</span><span class="params">(String section, String key)</span></span>;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">WriteIni</span><span class="params">(String section, String key, String value)</span></span>;</div></pre></td></tr></table></figure>
+<h3 id="3-c-实现"><a href="#3-c-实现" class="headerlink" title="3. c++实现"></a>3. c++实现</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function">JNIEXPORT jstring JNICALL <span class="title">Java_com_okpay_ui_BaseActivity_readIni</span><span class="params">(JNIEnv *env,</span></span></div><div class="line">		jobject obj, jstring section, jstring key) &#123;</div><div class="line">	<span class="keyword">const</span> <span class="keyword">char</span> *cSection = env-&gt;GetStringUTFChars(section, <span class="number">0</span>);</div><div class="line">	<span class="keyword">const</span> <span class="keyword">char</span> *cKey = env-&gt;GetStringUTFChars(key, <span class="number">0</span>);</div><div class="line">	<span class="function">IniSetting <span class="title">setting</span><span class="params">(<span class="string">"OKPay2.ini"</span>)</span></span>;</div><div class="line">	<span class="keyword">const</span> <span class="keyword">char</span> *value = setting.readIni(cSection, cKey);</div><div class="line">	env-&gt;ReleaseStringUTFChars(section, cSection);</div><div class="line">	env-&gt;ReleaseStringUTFChars(key, cKey);</div><div class="line">	<span class="keyword">if</span> (value == <span class="literal">NULL</span>)</div><div class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">	<span class="keyword">return</span> env-&gt;NewStringUTF(gbk2utf8(env, value));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function">JNIEXPORT <span class="keyword">void</span> JNICALL <span class="title">Java_com_okpay_ui_BaseActivity_WriteIni</span><span class="params">(JNIEnv *env,</span></span></div><div class="line">		jobject obj, jstring section, jstring key, jstring value) &#123;</div><div class="line">	<span class="function">IniSetting <span class="title">setting</span><span class="params">(<span class="string">"OKPay2.ini"</span>)</span></span>;</div><div class="line">	<span class="keyword">char</span> *cSection = jstringTopChar(env, section, <span class="string">"GBK"</span>);</div><div class="line">	<span class="keyword">char</span> *cKey = jstringTopChar(env, key, <span class="string">"GBK"</span>);</div><div class="line">	<span class="keyword">char</span> *cValue = jstringTopChar(env, value, <span class="string">"GBK"</span>);</div><div class="line">	setting.setini(cSection, cKey, cValue);</div><div class="line">	env-&gt;ReleaseStringUTFChars(section, cSection);</div><div class="line">	env-&gt;ReleaseStringUTFChars(key, cKey);</div><div class="line">	env-&gt;ReleaseStringUTFChars(value, cValue);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="4-java-调用"><a href="#4-java-调用" class="headerlink" title="4. java 调用"></a>4. java 调用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">static</span> &#123;</div><div class="line">		System.loadLibrary(<span class="string">"OKPayNative"</span>);</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">String value = readIni(<span class="string">"Server"</span>, <span class="string">"Host"</span>);</div><div class="line"></div><div class="line">WriteIni(<span class="string">"Server"</span>, <span class="string">"Host"</span>,value);</div></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/03/03/hello-world/" data-id="ciztgq4fs0001eco059uib55z" class="article-share-link">分享</a>
+      <a data-url="http://yoursite.com/2017/05/09/android-JNI/" data-id="cj2hc1kus0001u8o0yink9cvx" class="article-share-link">分享</a>
       
       
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JNI/">JNI</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/">c++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/native/">native</a></li></ul>
+
     </footer>
   </div>
   
@@ -109,20 +113,27 @@
 
 
   <nav id="page-nav">
-    <a class="extend prev" rel="prev" href="/"> &laquo; 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/"> &laquo; 上一页</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">下一页 &raquo; </a>
   </nav>
 </section>
         
           <aside id="sidebar">
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/android-JNI/">android JNI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li></ul>
+    </div>
+  </div>
+
 
   
     
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/makedown/">makedown</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/android/">android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/">c++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/">java</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/makedown/">makedown</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/native/">native</a></li></ul>
     </div>
   </div>
 
@@ -132,7 +143,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/makedown/" style="font-size: 10px;">makedown</a>
+      <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/android/" style="font-size: 10px;">android</a> <a href="/tags/c/" style="font-size: 10px;">c++</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/java/" style="font-size: 10px;">java</a> <a href="/tags/makedown/" style="font-size: 10px;">makedown</a> <a href="/tags/native/" style="font-size: 10px;">native</a>
     </div>
   </div>
 
@@ -141,7 +152,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li></ul>
     </div>
   </div>
 
@@ -154,11 +165,19 @@
       <ul>
         
           <li>
-            <a href="/2017/03/03/Test/">Markdown的语法</a>
+            <a href="/2017/05/09/hexo/">Hexo的部署</a>
           </li>
         
           <li>
-            <a href="/2017/03/03/hello-world/">Hello World</a>
+            <a href="/2017/05/09/android-JNI/">Androi JNI 开发</a>
+          </li>
+        
+          <li>
+            <a href="/2017/03/17/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/03/03/Test/">Markdown的语法</a>
           </li>
         
       </ul>
